@@ -1,0 +1,6 @@
+{
+  "name": "Go Dev Container (Rancher)",
+  "image": "mcr.microsoft.com/devcontainers/go:1.27",
+  "remoteUser": "vscode",
+  "postCreateCommand": "go install github.com/air-verse/air@latest"
+}
