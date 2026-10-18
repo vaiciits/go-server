@@ -1,6 +1,22 @@
 {
   "name": "Go Dev Container (Rancher)",
   "image": "mcr.microsoft.com/devcontainers/go:1.27",
+  "mounts": [
+    "source=go-server-data,target=/data,type=volume"
+  ],
+  "postCreateCommand": "bash -lc 'go install github.com/air-verse/air@latest'",
+  "containerEnv": {
+    "GOBIN": "/go/bin"
+  },
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/go/bin"
+  },
   "remoteUser": "vscode",
-  "postCreateCommand": "go install github.com/air-verse/air@latest"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.Go"
+      ]
+    }
+  }
 }

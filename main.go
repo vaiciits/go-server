@@ -21,7 +21,7 @@ type Post struct {
 }
 
 func main() {
-	db, err := sql.Open("sqlite", "./social.db")
+	db, err := sql.Open("sqlite", "./data/social.db")
 	if err != nil {
 		log.Fatalf("Database connection error: %v", err)
 	}
