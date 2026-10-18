@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"syscall"
@@ -50,15 +51,26 @@ func handleClient(nfd int) {
 
 	fmt.Printf("--- Kernel level request ---\n%s\n", string(buf[:n]))
 
-	body := "Hello from bare-metal OS system calls!"
+	payload := map[string]any{
+		"message": "Hello from bare-metal OS system calls!",
+		"status":  "success",
+		"code":    200,
+	}
+
+	bodyBytes, err := json.Marshal(payload)
+	if err != nil {
+		log.Printf("JSON encoding error: %v", err)
+		return
+	}
+
 	response := fmt.Sprintf(
 		"HTTP/1.1 200 OK\r\n"+
-			"Content-Type: text/plain; charset=utf-8\r\n"+
+			"Content-Type: application/json; charset=utf-8\r\n"+
 			"Content-Length: %d\r\n"+
 			"Connection: close\r\n\r\n"+
 			"%s",
-		len(body),
-		body,
+		len(bodyBytes),
+		string(bodyBytes),
 	)
 
 	syscall.Write(nfd, []byte(response))
