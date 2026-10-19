@@ -20,6 +20,6 @@ func RouteRequest(nfd int, database *sql.DB, method string, path string, lines [
 	case method == "POST" && strings.HasPrefix(path, "/posts/") && strings.HasSuffix(path, "/like"):
 		HandleLikePost(nfd, database, path, lines)
 	default:
-		SendResponse(nfd, 404, map[string]string{"error": "Not Found"})
+		SendErrorResponse(nfd, statusNotFound, "Not Found")
 	}
 }

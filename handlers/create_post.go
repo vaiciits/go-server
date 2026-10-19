@@ -8,7 +8,7 @@ import (
 func HandleCreatePost(nfd int, db *sql.DB, body string, lines []string) {
 	userID, err := AuthenticateUser(db, lines)
 	if err != nil {
-		SendErrorResponse(nfd, 401, "Unauthorized")
+		SendErrorResponse(nfd, statusUnauthorized, "Unauthorized")
 		return
 	}
 
@@ -16,16 +16,16 @@ func HandleCreatePost(nfd int, db *sql.DB, body string, lines []string) {
 		Content string `json:"content"`
 	}
 	if err := json.Unmarshal([]byte(body), &input); err != nil || input.Content == "" {
-		SendErrorResponse(nfd, 400, "Content required")
+		SendErrorResponse(nfd, statusBadRequest, "Content required")
 		return
 	}
 
 	result, err := db.Exec("INSERT INTO posts (user_id, content) VALUES (?, ?)", userID, input.Content)
 	if err != nil {
-		SendErrorResponse(nfd, 500, "Failed to create post")
+		SendErrorResponse(nfd, statusInternalServerError, "Failed to create post")
 		return
 	}
 
 	id, _ := result.LastInsertId()
-	SendResponse(nfd, 201, map[string]any{"id": id, "status": "created"})
+	SendResponse(nfd, statusCreated, map[string]any{"id": id, "status": "created"})
 }

@@ -11,15 +11,15 @@ func HandleRegister(nfd int, db *sql.DB, body string) {
 		Password string `json:"password"`
 	}
 	if err := json.Unmarshal([]byte(body), &input); err != nil || input.Username == "" || input.Password == "" {
-		SendErrorResponse(nfd, 400, "Invalid input")
+		SendErrorResponse(nfd, statusBadRequest, "Invalid input")
 		return
 	}
 
 	_, err := db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", input.Username, input.Password)
 	if err != nil {
-		SendErrorResponse(nfd, 500, "Username already taken")
+		SendErrorResponse(nfd, statusInternalServerError, "Username already taken")
 		return
 	}
 
-	SendResponse(nfd, 201, map[string]string{"status": "registered"})
+	SendResponse(nfd, statusCreated, map[string]string{"status": "registered"})
 }

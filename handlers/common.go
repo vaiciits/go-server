@@ -8,6 +8,15 @@ import (
 	"syscall"
 )
 
+const (
+	statusOK                  = 200
+	statusCreated             = 201
+	statusBadRequest          = 400
+	statusUnauthorized        = 401
+	statusNotFound            = 404
+	statusInternalServerError = 500
+)
+
 func AuthenticateUser(db *sql.DB, lines []string) (int64, error) {
 	token := ExtractToken(lines)
 	if token == "" {

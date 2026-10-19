@@ -12,5 +12,5 @@ func HandleLogout(nfd int, db *sql.DB, lines []string) {
 	}
 
 	db.Exec("DELETE FROM sessions WHERE token = ?", token)
-	SendResponse(nfd, 200, map[string]string{"status": "logged out"})
+	SendResponse(nfd, statusOK, map[string]string{"status": "logged out"})
 }

@@ -13,14 +13,14 @@ func HandleLogin(nfd int, db *sql.DB, body string) {
 		Password string `json:"password"`
 	}
 	if err := json.Unmarshal([]byte(body), &input); err != nil {
-		SendErrorResponse(nfd, 400, "Invalid input")
+		SendErrorResponse(nfd, statusBadRequest, "Invalid input")
 	}
 
 	var userID int64
 	var storedPass string
 	err := db.QueryRow("SELECT id, password FROM users WHERE username = ?", input.Username).Scan(&userID, &storedPass)
 	if err != nil || storedPass != input.Password {
-		SendErrorResponse(nfd, 401, "Invalid credentials")
+		SendErrorResponse(nfd, statusUnauthorized, "Invalid credentials")
 		return
 	}
 
@@ -30,9 +30,9 @@ func HandleLogin(nfd int, db *sql.DB, body string) {
 
 	_, err = db.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", userID, token)
 	if err != nil {
-		SendErrorResponse(nfd, 500, "Could not create session")
+		SendErrorResponse(nfd, statusInternalServerError, "Could not create session")
 		return
 	}
 
-	SendResponse(nfd, 200, map[string]string{"token": token})
+	SendResponse(nfd, statusOK, map[string]string{"token": token})
 }
