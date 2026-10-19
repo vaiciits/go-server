@@ -15,11 +15,11 @@ func HandleGetPosts(nfd int, db *sql.DB) {
 		ORDER BY p.id DESC LIMIT 10
 	`)
 	if err != nil {
-		SendResponse(nfd, 500, map[string]string{"error": err.Error()})
+		SendErrorResponse(nfd, 500, "Failed to fetch posts")
 		return
 	}
 	if rows.Err() != nil {
-		SendResponse(nfd, 500, map[string]string{"error": rows.Err().Error()})
+		SendErrorResponse(nfd, 500, "Failed to fetch posts")
 		return
 	}
 	defer rows.Close()

@@ -7,7 +7,7 @@ import (
 func HandleLogout(nfd int, db *sql.DB, lines []string) {
 	token := ExtractToken(lines)
 	if token == "" {
-		SendResponse(nfd, 401, map[string]string{"error": "Unauthorized"})
+		SendErrorResponse(nfd, 401, "Unauthorized")
 		return
 	}
 

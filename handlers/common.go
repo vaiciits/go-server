@@ -39,6 +39,10 @@ func ExtractToken(lines []string) string {
 	return ""
 }
 
+func SendErrorResponse(nfd int, statusCode int, message string) {
+	SendResponse(nfd, statusCode, map[string]string{"error": message})
+}
+
 func SendResponse(nfd int, statusCode int, payload any) {
 	bodyBytes, _ := json.Marshal(payload)
 	statusText := "OK"
